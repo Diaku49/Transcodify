@@ -1,0 +1,129 @@
+.authContainer {
+    min-height: 75vh;
+    min-width: 100vw;
+    background: #f8fafc; /* light gray (almost white) */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+}
+
+.authBox {
+    background: #18181b; /* deep dark gray, or use #111 or #222 */
+    color: #fff;
+    padding: 2.3rem 2rem 1.7rem 2rem;
+    border-radius: 18px;
+    box-shadow: 0 6px 32px rgba(0,0,0,0.28);
+    min-width: 330px;
+    max-width: 420px;
+    width: 100%;
+    margin: 0 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h2 {
+    margin-bottom: 1.1rem;
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: #fff;
+    text-align: center;
+}
+
+form {
+    width: 100%;
+}
+
+form div {
+    margin-bottom: 1.1rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-size: 0.99rem;
+    color: #e5e7eb; /* light gray for contrast */
+    font-weight: 600;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+    width: 100%;
+    padding: 0.7em 1em;
+    border: 2px solid #2d2d35;
+    border-radius: 6px;
+    font-size: 0.98rem;
+    background: #232329;
+    color: #f8fafc;
+    transition: border-color 0.18s, background 0.15s;
+    margin-top: 3px;
+    box-sizing: border-box;
+}
+
+input:focus {
+    border-color: #3b82f6;
+    background: #18181b;
+    outline: none;
+}
+
+.authButton {
+    width: 100%;
+    background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
+    color: #fff;
+    padding: 0.7em 0;
+    font-size: 1.09rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 7px;
+    box-shadow: 0 2px 10px #3b82f620;
+    margin-top: 0.2em;
+    cursor: pointer;
+    transition: background 0.16s, transform 0.09s;
+}
+
+.authButton:hover {
+    background: linear-gradient(90deg, #1e40af 0%, #2563eb 100%);
+    transform: scale(1.02);
+}
+
+.switchText {
+    margin-top: 1em;
+    color: #cbd5e1;
+    font-size: 0.97rem;
+    text-align: center;
+}
+
+.switchButton {
+    background: none;
+    border: none;
+    color: #3b82f6;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 2px;
+    font-size: 0.96rem;
+    padding: 0;
+    transition: color 0.11s;
+}
+
+.switchButton:hover {
+    color: #60a5fa;
+    text-decoration: underline;
+}
+
+.status {
+    margin-top: 0.9em;
+    font-size: 1rem;
+    color: #3b82f6;
+    text-align: center;
+}
+
+@media (max-width: 480px) {
+    .authBox {
+        min-width: 98vw;
+        padding: 1.1rem 0.5rem;
+        border-radius: 0;
+        box-shadow: none;
+    }
+}

@@ -1,0 +1,115 @@
+/* UploadPage.module.css */
+
+/* Style for the entire container */
+.uploadContainer {
+    background-color: #f1f1f1;
+    color: #333;
+    min-height: 75vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+/* Video name input styling */
+.uploadContainer input[type="text"] {
+    padding: 10px;
+    margin: 10px 0;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+    color: #333;
+    width: 100%;
+    max-width: 400px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+/* Focused state for the video name input */
+.uploadContainer input[type="text"]:focus {
+    border-color: #0066cc; /* Blue border on focus */
+    box-shadow: 0 0 5px rgba(0, 102, 204, 0.5); /* Optional: slight glow effect */
+}
+
+/* Other inputs (file inputs, checkboxes, buttons) */
+.uploadContainer input[type="file"] {
+    padding: 10px;
+    margin: 10px 0;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+    color: #333;
+    width: 100%;
+    max-width: 400px;
+    font-size: 1rem;
+}
+
+.uploadContainer input[type="file"]:focus {
+    outline: none;
+    border-color: #0066cc;
+}
+
+/* Other button and form styling (already defined previously) */
+.uploadContainer button {
+    background-color: #0066cc;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+.uploadContainer button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.uploadContainer button:hover:not(:disabled) {
+    background-color: #005bb5;
+}
+
+/* Additional styling for checkboxes and labels */
+.uploadContainer label {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 5px;
+    display: block;
+}
+
+/* Ensures proper layout for form and checkboxes */
+.uploadContainer form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+.uploadContainer form input[type="file"],
+.uploadContainer form input[type="text"],
+.uploadContainer form select {
+    margin-bottom: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .uploadContainer {
+        padding: 10px;
+    }
+
+    .uploadContainer h1 {
+        font-size: 1.5rem;
+    }
+
+    .uploadContainer input[type="file"], 
+    .uploadContainer input[type="text"], 
+    .uploadContainer button {
+        width: 100%;
+    }
+}

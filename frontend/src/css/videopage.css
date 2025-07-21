@@ -1,0 +1,19 @@
+.Video-container {
+    min-height: 60vh;
+    padding: 2.5rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;         /* Center the items horizontally */
+    background: transparent;     /* or use a shade if you want */
+    gap: 2rem;                   /* spacing between VideoItems */
+    width: 100%;
+}
+
+@media (min-width: 800px) {
+    .Video-container {
+        padding-top: 4rem;
+        padding-bottom: 4rem;
+        max-width: 900px;
+        margin: 0 auto;
+    }
+}
