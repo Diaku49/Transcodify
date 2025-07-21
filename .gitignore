@@ -1,0 +1,49 @@
+# Node (React)
+frontend/node_modules/
+frontend/build/
+frontend/.env
+
+# Golang - Backend module
+backend/bin/
+backend/*.exe
+backend/*.out
+backend/.env
+backend/vendor/
+backend/tmp/
+backend/coverage.out
+
+# Golang - Worker module
+worker/bin/
+worker/*.exe
+worker/*.out
+worker/.env
+worker/vendor/
+worker/tmp/
+worker/coverage.out
+
+# Golang - Shared S3Client module
+shared/s3client/bin/
+shared/s3client/*.exe
+shared/s3client/*.out
+shared/s3client/.env
+shared/s3client/vendor/
+shared/s3client/tmp/
+shared/s3client/coverage.out
+
+# Shared (if you have generated files)
+shared/node_modules/
+shared/build/
+shared/.env
+
+# General
+tmp/
+*.log
+*.env
+.DS_Store
+Thumbs.db
+
+# VSCode/IDE
+.vscode/
+.idea/
+*.swp
+*.swo 
