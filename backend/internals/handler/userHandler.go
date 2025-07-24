@@ -7,6 +7,8 @@ import (
 	"time"
 
 	Jwt "github.com/Diaku49/FoodOrderSystem/backend/internals/JwtService"
+	"github.com/Diaku49/FoodOrderSystem/backend/internals/constants"
+	"github.com/Diaku49/FoodOrderSystem/backend/internals/email"
 	"github.com/Diaku49/FoodOrderSystem/backend/internals/model"
 	"github.com/Diaku49/FoodOrderSystem/backend/internals/repository"
 	util "github.com/Diaku49/FoodOrderSystem/backend/utilities"
@@ -81,7 +83,7 @@ func (uh *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// getting userInfo
-	userCred, err := uh.UserRepository.GetUserByEmail(payload)
+	userCred, err := uh.UserRepository.GetUserByEmail(payload.Email)
 	if err != nil {
 		util.WriteJsonError(w, "couldnt fetch user", http.StatusBadRequest, err)
 		return
@@ -94,7 +96,7 @@ func (uh *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	exp := time.Now().Add(time.Hour * 48).Unix()
+	exp := time.Now().Add(time.Hour * 24).Unix()
 	token, err := Jwt.CreateJwt(uh.Key, userCred.ID, exp)
 	if err != nil {
 		util.WriteJsonError(w, "token creation faild", http.StatusInternalServerError, err)
@@ -131,4 +133,74 @@ func (uh *UserHandler) GetProfile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	util.WriteJsonSuccess(w, http.StatusAccepted, resp)
+}
+
+func (uh *UserHandler) SendResetPasswordEmail(w http.ResponseWriter, r *http.Request) {
+	var payload model.GetUserByEmailPayload
+	err := json.NewDecoder(r.Body).Decode(&payload)
+	if err != nil {
+		util.WriteJsonError(w, "couldnt parse payload", http.StatusBadRequest, err)
+	}
+
+	if err := uh.Validate.Struct(payload); err != nil {
+		util.WriteJsonError(w, "Validation failed", http.StatusBadRequest, err)
+	}
+
+	userCred, err := uh.UserRepository.GetUserByEmail(payload.Email)
+	if err != nil {
+		util.WriteJsonError(w, err.Error(), http.StatusInternalServerError, err)
+	}
+
+	// make token
+	token, err := Jwt.CreateJwt(string(constants.ResetPassTokenKey), userCred.ID, time.Now().Add(time.Hour*1).Unix())
+	if err != nil {
+		util.WriteJsonError(w, "token creation failed", http.StatusInternalServerError, err)
+		return
+	}
+
+	// setup for mail
+	data := model.ResetPasswordMailData{
+		Email:    userCred.Email,
+		ResetURL: constants.ResetPasswordURL + token,
+		Year:     time.Now().Year(),
+		Token:    token,
+	}
+
+	err = email.MailC.SendResetPasswordEmail(userCred.Email, "Change Password", data)
+	if err != nil {
+		util.WriteJsonError(w, "email send failed", http.StatusInternalServerError, err)
+		return
+	}
+
+	util.WriteJsonSuccess(w, http.StatusAccepted, model.SuccessResponse{
+		Message: "email sent successfully",
+	})
+}
+
+func (uh *UserHandler) ChangePasswordByEmail(w http.ResponseWriter, r *http.Request) {
+	var payload model.ChangePasswordByEmailPayload
+	err := json.NewDecoder(r.Body).Decode(&payload)
+	if err != nil {
+		util.WriteJsonError(w, "couldnt parse payload", http.StatusBadRequest, err)
+	}
+
+	if err := uh.Validate.Struct(payload); err != nil {
+		util.WriteJsonError(w, "Validation failed", http.StatusBadRequest, err)
+	}
+
+	userId, err := util.GetUserIDFromContext(r)
+	if err != nil {
+		util.WriteJsonError(w, "Not authorize", http.StatusInternalServerError, err)
+		return
+	}
+
+	err = uh.UserRepository.ChangePassword(userId, payload.Password)
+	if err != nil {
+		util.WriteJsonError(w, "db error", http.StatusInternalServerError, err)
+		return
+	}
+
+	util.WriteJsonSuccess(w, http.StatusAccepted, model.SuccessResponse{
+		Message: "password changed successfully",
+	})
 }

@@ -36,6 +36,8 @@ func SetupRouter(db *gorm.DB, mqc *mq.MQClient) *chi.Mux {
 		r.Post("/login", userHandlers.Login)
 		r.Post("/signup", userHandlers.Signup)
 		r.Get("/profile", middleware.Auth(userHandlers.GetProfile, key))
+		r.Post("/reset-password", userHandlers.SendResetPasswordEmail)
+		r.Post("/change-password", middleware.Auth(userHandlers.ChangePasswordByEmail, key))
 	})
 
 	// Video routes
