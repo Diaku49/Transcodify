@@ -1,7 +1,7 @@
 .authContainer {
     min-height: 75vh;
     min-width: 100vw;
-    background: #f8fafc; /* light gray (almost white) */
+    background: #f8fafc;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -9,7 +9,7 @@
 }
 
 .authBox {
-    background: #18181b; /* deep dark gray, or use #111 or #222 */
+    background: #18181b;
     color: #fff;
     padding: 2.3rem 2rem 1.7rem 2rem;
     border-radius: 18px;
@@ -43,7 +43,7 @@ label {
     display: block;
     margin-bottom: 0.3rem;
     font-size: 0.99rem;
-    color: #e5e7eb; /* light gray for contrast */
+    color: #e5e7eb;
     font-weight: 600;
 }
 
@@ -125,24 +125,22 @@ input:focus {
 }
 
 .passwordInputWrapper input {
-    padding-right: 38px; /* space for the icon */
+    padding-right: 38px;
 }
 
 .eyeIcon {
     position: absolute;
     right: 12px;
-    top: 38px; /* adjust if needed to vertically center */
+    top: 38px;
     width: 22px;
     height: 22px;
     cursor: pointer;
     opacity: 0.7;
     transition: opacity 0.15s;
-    /* Blue tint filter */
     filter: invert(41%) sepia(98%) saturate(749%) hue-rotate(196deg) brightness(97%) contrast(101%);
 }
 .eyeIcon:hover {
     opacity: 1;
-    /* Slightly lighter blue on hover */
     filter: invert(41%) sepia(98%) saturate(749%) hue-rotate(196deg) brightness(110%) contrast(101%);
 }
 

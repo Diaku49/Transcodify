@@ -3,16 +3,24 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 	"s3client"
 
 	"github.com/Diaku49/FoodOrderSystem/backend/internals/db"
 	"github.com/Diaku49/FoodOrderSystem/backend/internals/email"
 	"github.com/Diaku49/FoodOrderSystem/backend/internals/router"
 	"github.com/Diaku49/FoodOrderSystem/backend/mq"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	err := s3client.InitS3Client()
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file: %v", err)
+	}
+	port := os.Getenv("PORT")
+
+	err = s3client.InitS3Client()
 	if err != nil {
 		log.Fatalf("Initializing s3client failed: %v", err)
 	}
@@ -30,6 +38,6 @@ func main() {
 	mqClient := mq.InitRabbitmqClient()
 	r := router.SetupRouter(database, mqClient)
 
-	log.Println("Server running on port:8080")
-	log.Fatal(http.ListenAndServe(":8080", r))
+	log.Println("Server running on port:" + port)
+	log.Fatal(http.ListenAndServe(":"+port, r))
 }
