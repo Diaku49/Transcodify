@@ -25,8 +25,8 @@ type UserInfo struct {
 type UserSignupPayload struct {
 	UserName        string `json:"userName" validate:"required"`
 	Email           string `json:"email" validate:"required,min=3"`
-	Password        string `json:"password" validate:"required min=6"`
-	ConfirmPassword string `json:"confirmPassword" validate:"required eqfield=Password"`
+	Password        string `json:"password" validate:"required,min=6"`
+	ConfirmPassword string `json:"confirmPassword" validate:"required,eqfield=Password"`
 }
 
 type GetUserByEmailPayload struct {
@@ -35,7 +35,7 @@ type GetUserByEmailPayload struct {
 
 type UserLoginPayload struct {
 	Email    string `json:"email" validate:"required,min=3"`
-	Password string `json:"password" validate:"required min=6"`
+	Password string `json:"password" validate:"required,min=6"`
 }
 
 type UserLoginResponse struct {
