@@ -5,12 +5,18 @@ import (
 	"os"
 	"time"
 
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
 
 func Connect() *gorm.DB {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file: %v", err)
+	}
+
 	dsn := os.Getenv("DATABASE_DSN")
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger:                 logger.Default.LogMode(logger.Info),

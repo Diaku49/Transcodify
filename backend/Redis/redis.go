@@ -17,10 +17,14 @@ type RedisClient struct {
 }
 
 func NewRedisClient() *RedisClient {
-	redisAdd := os.Getenv("REDIS_ADDR")
+	redisHost := os.Getenv("REDIS_HOST")
+	redisPort := os.Getenv("REDIS_PORT")
 	redisPass := os.Getenv("REDIS_PASS")
+	if redisPass == "" {
+		redisPass = ""
+	}
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     redisAdd,
+		Addr:     redisHost + ":" + redisPort,
 		Password: redisPass,
 		DB:       0,
 	})

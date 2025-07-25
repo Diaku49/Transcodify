@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"s3client"
@@ -18,6 +19,8 @@ func main() {
 	}
 	rmqClient := rmqclient.InitMQClient(db)
 	redisClient := Redis.NewRedisClient()
+
+	fmt.Println("Worker started")
 
 	rmqClient.HandleUploadVideos(redisClient)
 }

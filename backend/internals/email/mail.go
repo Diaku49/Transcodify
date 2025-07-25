@@ -53,7 +53,7 @@ func InitMail() error {
 }
 
 func LoadTemplate(templateName string) (*template.Template, error) {
-	filePath := fmt.Sprintf("templates/%s.html", templateName)
+	filePath := fmt.Sprintf("internals/email/templates/%s.html", templateName)
 	content, err := os.ReadFile(filePath)
 	if err != nil {
 		return nil, err

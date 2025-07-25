@@ -26,8 +26,8 @@ func SetupRouter(db *gorm.DB, mqc *mq.MQClient) *chi.Mux {
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 		ExposedHeaders:   []string{"Link"},
-		AllowCredentials: true, // Important for cookies/auth
-		MaxAge:           300,  // Cache results (seconds)
+		AllowCredentials: true,
+		MaxAge:           300,
 	}))
 
 	// User routes
@@ -43,7 +43,7 @@ func SetupRouter(db *gorm.DB, mqc *mq.MQClient) *chi.Mux {
 	// Video routes
 	videoHandlers := handler.NewVH(db, mqc, rdbc)
 	r.Route("/video", func(r chi.Router) {
-		r.Get("", videoHandlers.GetAllVideos)
+		r.Get("/", videoHandlers.GetAllVideos)
 		r.Post("/upload", middleware.Auth(videoHandlers.UploadHandler, key))
 		r.Get("/upload/{videoId}", middleware.Auth(videoHandlers.GetVideoInfoHandler, key))
 	})

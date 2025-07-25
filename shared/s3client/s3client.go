@@ -24,7 +24,7 @@ var Bucket string
 
 func InitS3Client() error {
 	if S3Client == nil {
-		err := godotenv.Load()
+		err := godotenv.Load("./.env")
 		if err != nil {
 			log.Fatal("Error loading .env file")
 			return err

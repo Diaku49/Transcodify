@@ -3,16 +3,17 @@ package mq
 import (
 	"fmt"
 	"log"
+	"os"
 
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
 type MQClient struct {
-	Conn         *amqp.Connection
-	Channel      *amqp.Channel
-	OrderQueue   *amqp.Queue
-	RoutingKey   string
-	ExchangeName string
+	Conn             *amqp.Connection
+	Channel          *amqp.Channel
+	UploadVideoQueue *amqp.Queue
+	RoutingKey       string
+	ExchangeName     string
 }
 
 func (mqc *MQClient) Close() {
@@ -22,23 +23,24 @@ func (mqc *MQClient) Close() {
 
 func InitRabbitmqClient() *MQClient {
 	const (
-		ExchangeFoodOrder = "foodOrderSystem"
-		QueueOrderCreate  = "order-service.create"
-		RoutingKeyOrders  = "orders"
+		ExchangeVideoTranscoder = "videotranscode"
+		QueueUploadVideo        = "upload-video-service"
+		RoutingKeyUpload        = "upload-video"
 	)
 
-	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+	url := os.Getenv("RMQ_URL")
+	conn, err := amqp.Dial(url)
 	if err != nil {
-		log.Panicf("Rabbitmq failed to connect err: %v", err)
+		log.Panicf("Failed connecting to rabbitmq err: %v", err)
 	}
 
 	ch, err := conn.Channel()
 	if err != nil {
-		log.Panicf("Rabbitmq failed to create channel err: %v", err)
+		log.Panicf("Failed creating channel err: %v", err)
 	}
 
-	orderQueue, err := ch.QueueDeclare(
-		QueueOrderCreate,
+	uploadVideoQueue, err := ch.QueueDeclare(
+		QueueUploadVideo,
 		true,
 		false,
 		false,
@@ -50,7 +52,7 @@ func InitRabbitmqClient() *MQClient {
 	}
 
 	err = ch.ExchangeDeclare(
-		ExchangeFoodOrder,
+		ExchangeVideoTranscoder,
 		"direct",
 		true,
 		false,
@@ -63,9 +65,9 @@ func InitRabbitmqClient() *MQClient {
 	}
 
 	err = ch.QueueBind(
-		QueueOrderCreate,
-		RoutingKeyOrders,
-		ExchangeFoodOrder,
+		QueueUploadVideo,
+		RoutingKeyUpload,
+		ExchangeVideoTranscoder,
 		false,
 		nil,
 	)
@@ -74,11 +76,11 @@ func InitRabbitmqClient() *MQClient {
 	}
 
 	return &MQClient{
-		Conn:         conn,
-		Channel:      ch,
-		OrderQueue:   &orderQueue,
-		RoutingKey:   RoutingKeyOrders,
-		ExchangeName: ExchangeFoodOrder,
+		Conn:             conn,
+		Channel:          ch,
+		UploadVideoQueue: &uploadVideoQueue,
+		RoutingKey:       RoutingKeyUpload,
+		ExchangeName:     ExchangeVideoTranscoder,
 	}
 }
 

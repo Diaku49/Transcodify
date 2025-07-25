@@ -152,7 +152,8 @@ func (uh *UserHandler) SendResetPasswordEmail(w http.ResponseWriter, r *http.Req
 	}
 
 	// make token
-	token, err := Jwt.CreateJwt(string(constants.ResetPassTokenKey), userCred.ID, time.Now().Add(time.Hour*1).Unix())
+	tokenKey := os.Getenv("RESET_PASSWORD_TOKEN")
+	token, err := Jwt.CreateJwt(string(tokenKey), userCred.ID, time.Now().Add(time.Hour*1).Unix())
 	if err != nil {
 		util.WriteJsonError(w, "token creation failed", http.StatusInternalServerError, err)
 		return
