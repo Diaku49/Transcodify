@@ -60,7 +60,7 @@ func (uh *UserHandler) Signup(w http.ResponseWriter, r *http.Request) {
 	}
 	err = uh.UserRepository.CreateUser(&user)
 	if err != nil {
-		http.Error(w, "db failed: "+err.Error(), http.StatusInternalServerError)
+		util.WriteJsonError(w, "db failed", http.StatusBadRequest, err)
 		return
 	}
 

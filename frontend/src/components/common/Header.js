@@ -3,9 +3,15 @@ import userIcon from "../../assets/user.png";
 import styles from "../../css/header.module.css";
 import { Link } from "react-router-dom";
 
-export default function Header() {
-    const isLoggedIn = localStorage.getItem("token")
+export default function Header({ isLoggedIn, setIsLoggedIn }) {
+    const token = localStorage.getItem("token")
+    if (token) {
+        setIsLoggedIn(true)
+    }
+
     const loginStatusColor = isLoggedIn ? "#22c55e" : "#ef4444";
+
+
 
     return (
         <header className={styles.header}>

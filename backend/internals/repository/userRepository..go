@@ -21,9 +21,9 @@ func (ur *UserRepository) CreateUser(user *model.User) error {
 	return nil
 }
 
-func (ur *UserRepository) GetUserByEmail(email string) (*model.UserCredentials, error) {
-	var userCred model.UserCredentials
-	err := ur.DB.Find(&userCred).Where("email = ?", email).Select("id, password, email").Error
+func (ur *UserRepository) GetUserByEmail(email string) (*model.User, error) {
+	var userCred model.User
+	err := ur.DB.Where("email = ?", email).Select("id, password, email").Find(&userCred).Error
 	if err != nil {
 		return nil, fmt.Errorf("db error: %w", err)
 	}

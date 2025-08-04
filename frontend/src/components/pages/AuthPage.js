@@ -1,4 +1,5 @@
-import { useState } from "react"
+import { useState } from "react";
+import { toast } from "react-toastify";
 import styles from "../../css/authpage.module.css";
 import { Login, Signup } from "../../services/userService";
 import { useNavigate } from "react-router-dom";
@@ -6,14 +7,13 @@ import EyeSlashIcon from "../../assets/eye_slash.svg";
 import EyeIcon from "../../assets/eye.png";
 
 
-export default function AuthPage() {
+export default function AuthPage({ setIsLoggedIn }) {
     const navigate = useNavigate();
     const [isLogin, setIsLogin] = useState(true);
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [status, setStatus] = useState(null);
     const [isForgotPassword, setIsForgotPassword] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -26,8 +26,7 @@ export default function AuthPage() {
                 alert("Please enter your email.");
                 return;
             }
-            // Simulate API call for password reset
-            setStatus("If this email exists, a password reset link will be sent.");
+            // Simulate API call for password reset and notif it with toastify
             setIsForgotPassword(false);
             return;
         }
@@ -47,32 +46,31 @@ export default function AuthPage() {
         try {
             if (isLogin) {
                 const response = await Login(email, password)
-                const responseData = await response.json()
 
-                if (response.ok) {
-                    setStatus(responseData.message)
-                    const token = responseData.token
-                    localStorage.setItem("token", token)
+                if (response.status === 202) {
+                    toast.success(response.data.message)
+                    const token = response.data.jwt
+                    localStorage.setItem("token", token);
+                    setIsLoggedIn(true)
 
                     setTimeout(() => {
                         navigate("/")
-                    }, 1500)
+                    }, 2000)
                 } else {
-                    setStatus(responseData.message)
+                    toast.error(response.data.message)
                 }
             }
             else {
                 const response = await Signup(username, email, password, confirmPassword)
-                const responseData = await response.json()
-                if (response.ok) {
-                    setStatus(responseData.message)
+                if (response.status === 201) {
+                    toast.success(response.data.message)
                     setIsLogin(true)
                 } else {
-                    setStatus(responseData.message)
+                    toast.error(response.data.message)
                 }
             }
         } catch (err) {
-            console.log(err);
+            toast.error(err.response.data.message)
         }
     }
 
@@ -101,7 +99,8 @@ export default function AuthPage() {
                             <button
                                 type="button"
                                 className={styles.switchButton}
-                                onClick={() => { setIsForgotPassword(false); setStatus(null); }}
+                                // need to add the function for this
+                                onClick={() => { setIsForgotPassword(false); }}
                             >
                                 Back to Login
                             </button>
@@ -184,7 +183,7 @@ export default function AuthPage() {
                             <button
                                 type="button"
                                 className={styles.switchButton}
-                                onClick={() => { setIsLogin((prev) => !prev); setStatus(null); }}
+                                onClick={() => { setIsLogin((prev) => !prev); }}
                             >
                                 {isLogin ? "Sign Up" : "Login"}
                             </button>
@@ -194,7 +193,7 @@ export default function AuthPage() {
                                 <button
                                     type="button"
                                     className={styles.switchButton}
-                                    onClick={() => { setIsForgotPassword(true); setStatus(null); }}
+                                    onClick={() => { setIsForgotPassword(true); }}
                                 >
                                     Forgot Password?
                                 </button>
@@ -203,7 +202,6 @@ export default function AuthPage() {
                     </>
                 )}
             </form>
-            {status && <p className={styles.status}>{status}</p>}
         </div>
     </div>)
 }

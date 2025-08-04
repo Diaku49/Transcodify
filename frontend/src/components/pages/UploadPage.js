@@ -37,17 +37,16 @@ export default function UploadPage() {
 
         try {
             const response = await uploadVideo(videoFile, videoName, resolutions)
-            const responseData = await response.json()
-            if (response.ok) {
-                setUploadStatus(responseData.message)
-                setUploadId(responseData.id)
-                localStorage.setItem("videoId", responseData.id)
+            if (response.status === 200) {
+                setUploadStatus(response.data.message)
+                setUploadId(response.data.id)
+                localStorage.setItem("videoId", response.data.id)
                 localStorage.setItem("transcodeStatus")
                 setVideoFile(null)
                 setVideoName(null)
                 setResolutions([])
             } else {
-                setUploadStatus(responseData.message)
+                setUploadStatus(response.data.message)
             }
         } catch (err) {
             console.log(err)
@@ -82,21 +81,20 @@ export default function UploadPage() {
         setIsUploading(false)
         setIsTranscoding(true)
         setTranscodeStatus("Slave starting...")
-        let responseData
+        let response
 
         try {
-            const response = await getVideoInfoById(uploadId)
-            responseData = await response.json()
-            if (response.ok) {
-                setTranscodeStatus(responseData.message)
+            response = await getVideoInfoById(uploadId)
+            if (response.status === 200) {
+                setTranscodeStatus(response.data.message)
             } else {
-                setTranscodeStatus(responseData.message)
+                setTranscodeStatus(response.data.message)
             }
         } catch (err) {
             setTranscodeStatus("Couldn get info about the transcode progress")
         }
 
-        if (responseData === "Finished") {
+        if (response.data.message === "Finished") {
             setIsTranscoding(false)
             setUploadId(null)
         }
