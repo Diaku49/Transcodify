@@ -13,20 +13,20 @@ Upload your video, pick your desired format, and let the magic happen. The app h
 This is a full-stack app with some pretty cool tech behind it:
 
 ### Frontend
-- **React 19** - Because who doesn't love React?
-- **React Router** - For smooth navigation
+- **React 19**
+- **React Router**
 - **Axios** - Making those API calls
 - **React Toastify** - For those nice little notifications
-- **CSS Modules** - Keeping styles organized and clean
+- **CSS Modules**
 
 ### Backend
-- **Go** - Fast, efficient, and reliable
+- **Go**
 - **Chi Router** - For handling all those HTTP requests
-- **GORM** - Database stuff made easy
-- **PostgreSQL** - Rock-solid database
-- **JWT** - Keeping things secure
-- **Redis** - For caching and session management
-- **RabbitMQ** - Message queuing for background tasks
+- **GORM** - Database stuff made easy by the ORM
+- **PostgreSQL**
+- **JWT** 
+- **Redis** - For mainly caching metadata and session management
+- **RabbitMQ** - Message queuing for background tasks (transcoding)
 
 ### Worker Service
 - **Go** - Processing videos in the background
