@@ -12,7 +12,7 @@ type VideoVariant struct {
 	gorm.Model
 	VideoID    uint   `json:"videoId"`
 	Resolution string `json:"resolution"`
-	URL        string `json:"url"`
+	Key        string `json:"key"`
 }
 
 // Response
@@ -20,7 +20,7 @@ type VideoVariant struct {
 type VideoVariantResp struct {
 	ID         uint   `json:"id"`
 	Resolution string `json:"resolution"`
-	URL        string `json:"url"`
+	Key        string `json:"key"`
 }
 
 type VideoResp struct {

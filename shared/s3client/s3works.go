@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"log"
 	"os"
 
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/s3"
 )
 
@@ -19,10 +21,16 @@ func (sc *StorageClient) Upload(id, resolution, localPath string) (string, error
 	buf := bytes.NewBuffer(nil)
 	io.Copy(buf, file)
 
-	key := id + ": " + resolution
+	key := id + "-" + resolution
+
+	// Debug logging
+	log.Printf("Uploading to bucket: %s", Bucket)
+	log.Printf("Uploading with key: %s", key)
+	log.Printf("File size: %d bytes", buf.Len())
+
 	_, err = sc.Client.PutObject(&s3.PutObjectInput{
-		Bucket: &sc.Bucket,
-		Key:    &key,
+		Bucket: aws.String(Bucket),
+		Key:    aws.String(key),
 		Body:   bytes.NewReader(buf.Bytes()),
 	})
 	if err != nil {
@@ -34,8 +42,8 @@ func (sc *StorageClient) Upload(id, resolution, localPath string) (string, error
 
 func (sc *StorageClient) Delete(key string) error {
 	_, err := sc.Client.DeleteObject(&s3.DeleteObjectInput{
-		Bucket: &sc.Bucket,
-		Key:    &key,
+		Bucket: aws.String(Bucket),
+		Key:    aws.String(key),
 	})
 	if err != nil {
 		return fmt.Errorf("failed to download video: %v", err)

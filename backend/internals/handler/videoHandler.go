@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"io"
+	"log"
 	"net/http"
 	"os"
 
@@ -82,7 +83,13 @@ func (vh *VideoHandler) UploadHandler(w http.ResponseWriter, r *http.Request) {
 	id := uuid.New().String()
 
 	// Use the existing tmp/uploads directory at project root
-	uploadsDir := "../tmp/uploads"
+	uploadsDir := "../../tmp/uploads"
+
+	// Create directory if it doesn't exist
+	if err := os.MkdirAll(uploadsDir, 0755); err != nil {
+		util.WriteJsonError(w, "Failed to create uploads directory", http.StatusInternalServerError, err)
+		return
+	}
 
 	path := uploadsDir + "/" + id + "_" + fileHeader.Filename
 	dst, err := os.Create(path)
@@ -97,6 +104,9 @@ func (vh *VideoHandler) UploadHandler(w http.ResponseWriter, r *http.Request) {
 		util.WriteJsonError(w, "Failed to write file", http.StatusInternalServerError, err)
 		return
 	}
+
+	// Log successful file save
+	log.Printf("File saved successfully at: %s", path)
 
 	// Saving metadata in json file
 	tempMeta := model.UploadedTempMetadata{
@@ -177,7 +187,7 @@ func transformVideoToResp(videos []model.Video) *model.GetAllVideosResp {
 					variants[i] = model.VideoVariantResp{
 						ID:         vv.ID,
 						Resolution: vv.Resolution,
-						URL:        vv.URL,
+						Key:        vv.Key,
 					}
 				}
 			}

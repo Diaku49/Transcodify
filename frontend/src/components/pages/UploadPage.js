@@ -6,7 +6,7 @@ import { getVideoInfoById, uploadVideo } from "../../services/videoService";
 export default function UploadPage() {
     const [videoFile, setVideoFile] = useState(null)
     const [videoName, setVideoName] = useState("");
-    const [resolutions, setResolutions] = useState(["1080"])
+    const [resolutions, setResolutions] = useState([])
     const [isUploading, setIsUploading] = useState(false)
     const [uploadStatus, setUploadStatus] = useState(null)
     const [uploadId, setUploadId] = useState(null)
@@ -28,8 +28,8 @@ export default function UploadPage() {
     const handleSubmit = async (e) => {
         e.preventDefault()
 
-        if (!videoFile) {
-            toast.error("Please select a video file");
+        if (!videoFile || !videoName || resolutions.length === 0) {
+            toast.error("Please select a video file, name and resolutions");
             return;
         }
 
@@ -80,9 +80,11 @@ export default function UploadPage() {
                 : [...prev, value]
         )
     }
+
     const handleFileChange = (e) => {
         setVideoFile(e.target.files[0])
     }
+
     const handleGetInfo = async (e) => {
         e.preventDefault()
 

@@ -96,6 +96,7 @@ func (mqc *MQClient) HandleUploadVideos(rdbc *Redis.RedisClient) error {
 			if err = db.CreateVideo(mqc.DB, meta.VideoName, videos); err != nil {
 				log.Printf("DB insert failed: %v", err)
 				rdbc.DeleteMetadata(meta.Id) // redis
+				s3client.S3Client.Delete(meta.Id)
 				return
 			}
 
@@ -105,6 +106,7 @@ func (mqc *MQClient) HandleUploadVideos(rdbc *Redis.RedisClient) error {
 			for _, path := range paths {
 				os.Remove(path)
 			}
+			s3client.S3Client.Delete(meta.Id)
 
 			msg.Ack(false)
 
@@ -116,6 +118,11 @@ func (mqc *MQClient) HandleUploadVideos(rdbc *Redis.RedisClient) error {
 }
 
 func transcode(meta model.UploadedTempMetadata) (map[string]string, error) {
+	// Create transcoded-videos directory if it doesn't exist
+	if err := os.MkdirAll("../tmp/transcoded-videos", 0755); err != nil {
+		return nil, fmt.Errorf("failed to create transcoded-videos directory: %w", err)
+	}
+
 	var wg sync.WaitGroup
 	resultPath := make(map[string]string)
 	var mu sync.Mutex
@@ -133,7 +140,7 @@ func transcode(meta model.UploadedTempMetadata) (map[string]string, error) {
 		go func(resolutionLabel, size string, resultpath map[string]string) {
 			defer wg.Done()
 
-			outputPath := fmt.Sprintf("tmp/transcoded-videos/%s_%s_%s.mp4", meta.Id, meta.VideoName, resolutionLabel)
+			outputPath := fmt.Sprintf("../tmp/transcoded-videos/%s_%s_%s.mp4", meta.Id, meta.VideoName, resolutionLabel)
 
 			cmd := exec.Command(
 				"ffmpeg",
