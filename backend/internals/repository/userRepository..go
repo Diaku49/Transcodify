@@ -37,7 +37,7 @@ func (ur *UserRepository) GetUserByEmail(email string) (*model.User, error) {
 
 func (ur *UserRepository) GetProfileById(id uint) (*model.User, error) {
 	var user model.User
-	err := ur.DB.Find(&user).Where("user_id = ?", id)
+	err := ur.DB.Where("id = ?", id).Find(&user).Error
 	if err != nil {
 		return nil, fmt.Errorf("db error: %v", err)
 	}
@@ -55,7 +55,7 @@ func (ur *UserRepository) ChangePassword(userId uint, password string) error {
 		return fmt.Errorf("failed hashing: %w", err)
 	}
 
-	err = ur.DB.Model(&model.User{}).Where("user_id = ?", userId).Update("password", string(hashedPassword)).Error
+	err = ur.DB.Model(&model.User{}).Where("id = ?", userId).Update("password", string(hashedPassword)).Error
 	if err != nil {
 		return fmt.Errorf("db error: %w", err)
 	}

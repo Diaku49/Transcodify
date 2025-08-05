@@ -1,0 +1,156 @@
+.changePassContainer {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2rem 1rem;
+}
+
+.changePassBox {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: 100%;
+    max-width: 400px;
+}
+
+.changePassBox h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.description {
+    color: #666;
+    text-align: center;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+    font-size: 0.95rem;
+}
+
+.changePassBox form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.passwordInputWrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.passwordInputWrapper label {
+    color: #333;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.passwordInputWrapper input {
+    padding: 0.75rem 1rem;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #333;
+    transition: border-color 0.3s ease;
+    background: white;
+}
+
+.passwordInputWrapper input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.passwordInputWrapper input::placeholder {
+    color: #9ca3af;
+}
+
+.eyeIcon {
+    position: absolute;
+    right: 1rem;
+    top: 2.5rem;
+    width: 20px;
+    height: 20px;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+}
+
+.eyeIcon:hover {
+    opacity: 1;
+}
+
+.changePassButton {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    border: none;
+    padding: 0.875rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 0.5rem;
+}
+
+.changePassButton:hover:not(:disabled) {
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.changePassButton:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.changePassButton:disabled {
+    background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+    cursor: not-allowed;
+    transform: none;
+    opacity: 0.7;
+}
+
+.backToLogin {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.backButton {
+    background: none;
+    border: none;
+    color: #3b82f6;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: underline;
+    transition: color 0.2s ease;
+}
+
+.backButton:hover {
+    color: #1d4ed8;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .changePassContainer {
+        padding: 1rem;
+    }
+    
+    .changePassBox {
+        padding: 2rem 1.5rem;
+    }
+    
+    .changePassBox h2 {
+        font-size: 1.6rem;
+    }
+    
+    .description {
+        font-size: 0.9rem;
+    }
+} 

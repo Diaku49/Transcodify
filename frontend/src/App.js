@@ -8,6 +8,7 @@ import HomePage from "./components/pages/HomePage";
 import UploadPage from "./components/pages/UploadPage";
 import Video from "./components/Videos";
 import AuthPage from "./components/pages/AuthPage";
+import ChangePassPage from "./components/pages/ChangePassPage";
 import { useState } from "react";
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
             <Route path="/video/upload" element={<UploadPage></UploadPage>} />
             <Route path="/video" element={<Video></Video>} />
             <Route path="/auth" element={<AuthPage setIsLoggedIn={setIsLoggedIn} ></AuthPage>} />
+            <Route path="/user/change-password" element={<ChangePassPage></ChangePassPage>} />
             <Route path="*" element={<></>} />
           </Routes>
         </main>

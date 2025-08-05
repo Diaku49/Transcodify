@@ -16,7 +16,25 @@ const Signup = (userName, email, password, confirmPassword) => {
     })
 }
 
+const sendResetPasswordEmail = (email) => {
+    return api.post("/user/reset-password", {
+        email
+    })
+}
+
+const changePasswordByEmail = (token, password) => {
+    return api.post("/user/change-password", {
+        password
+    }, {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    })
+}
+
 export {
     Login,
-    Signup
+    Signup,
+    sendResetPasswordEmail,
+    changePasswordByEmail
 }

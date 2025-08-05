@@ -76,7 +76,7 @@ func (mc *MailClient) SendResetPasswordEmail(to string, subject string, data mod
 	msg.SetHeader("From", mc.From)
 	msg.SetHeader("To", to)
 	msg.SetHeader("Subject", subject)
-	msg.SetBody("text/plain", body)
+	msg.SetBody("text/html", body)
 
 	return mc.Dialer.DialAndSend(msg)
 }

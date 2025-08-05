@@ -41,6 +41,14 @@ func (vh *VideoHandler) GetAllVideos(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if len(videos) == 0 {
+		resp := model.GetAllVideosResp{
+			Videos:  []model.VideoResp{},
+			Message: "No videos found",
+		}
+		util.WriteJsonSuccess(w, http.StatusOK, resp)
+		return
+	}
 	resp := transformVideoToResp(videos)
 
 	util.WriteJsonSuccess(w, http.StatusOK, resp)
@@ -72,7 +80,11 @@ func (vh *VideoHandler) UploadHandler(w http.ResponseWriter, r *http.Request) {
 
 	// making uuid, path and saving file
 	id := uuid.New().String()
-	path := "tmp/uploads/" + id + "_" + fileHeader.Filename
+
+	// Use the existing tmp/uploads directory at project root
+	uploadsDir := "../tmp/uploads"
+
+	path := uploadsDir + "/" + id + "_" + fileHeader.Filename
 	dst, err := os.Create(path)
 	if err != nil {
 		util.WriteJsonError(w, "Failed to save file", http.StatusInternalServerError, err)

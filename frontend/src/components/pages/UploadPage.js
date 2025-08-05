@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import styles from "../../css/uploadpage.module.css"
 import { getVideoInfoById, uploadVideo } from "../../services/videoService";
 
@@ -28,7 +29,7 @@ export default function UploadPage() {
         e.preventDefault()
 
         if (!videoFile) {
-            alert("Please select a video file")
+            toast.error("Please select a video file");
             return;
         }
 
@@ -36,8 +37,10 @@ export default function UploadPage() {
         setUploadStatus("Uploading video...")
 
         try {
-            const response = await uploadVideo(videoFile, videoName, resolutions)
+            const token = localStorage.getItem("token")
+            const response = await uploadVideo(videoFile, videoName, resolutions, token)
             if (response.status === 200) {
+                toast.success(response.data.message);
                 setUploadStatus(response.data.message)
                 setUploadId(response.data.id)
                 localStorage.setItem("videoId", response.data.id)
@@ -46,11 +49,20 @@ export default function UploadPage() {
                 setVideoName(null)
                 setResolutions([])
             } else {
+                toast.error(response.data.message);
                 setUploadStatus(response.data.message)
             }
         } catch (err) {
-            console.log(err)
-            setUploadStatus("An error occured while uploading")
+            if (err.response) {
+                toast.error(err.response.data.message || "An error occurred while uploading");
+                setUploadStatus(err.response.data.message || "An error occurred while uploading")
+            } else if (err.request) {
+                toast.error("Network error. Please check your connection.");
+                setUploadStatus("Network error. Please check your connection.")
+            } else {
+                toast.error("An unexpected error occurred while uploading");
+                setUploadStatus("An unexpected error occurred while uploading")
+            }
         }
 
         setIsUploading(false)
@@ -75,7 +87,7 @@ export default function UploadPage() {
         e.preventDefault()
 
         if (!uploadId) {
-            alert("no uploaded video for transcoding");
+            toast.error("No uploaded video for transcoding");
             return;
         }
         setIsUploading(false)
@@ -87,14 +99,27 @@ export default function UploadPage() {
             response = await getVideoInfoById(uploadId)
             if (response.status === 200) {
                 setTranscodeStatus(response.data.message)
+                if (response.data.message === "Finished") {
+                    toast.success("Video transcoding completed successfully!");
+                }
             } else {
+                toast.error(response.data.message);
                 setTranscodeStatus(response.data.message)
             }
         } catch (err) {
-            setTranscodeStatus("Couldn get info about the transcode progress")
+            if (err.response) {
+                toast.error(err.response.data.message || "Couldn't get info about the transcode progress");
+                setTranscodeStatus(err.response.data.message || "Couldn't get info about the transcode progress")
+            } else if (err.request) {
+                toast.error("Network error. Please check your connection.");
+                setTranscodeStatus("Network error. Please check your connection.")
+            } else {
+                toast.error("An unexpected error occurred while getting transcode info");
+                setTranscodeStatus("An unexpected error occurred while getting transcode info")
+            }
         }
 
-        if (response.data.message === "Finished") {
+        if (response?.data?.message === "Finished") {
             setIsTranscoding(false)
             setUploadId(null)
         }

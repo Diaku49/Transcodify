@@ -3,7 +3,6 @@ package model
 type UploadMetadata struct {
 	Resolutions []string `json:"resolutions"`
 	VideoName   string   `json:"video-name"`
-	UserID      string   `json:"userId"`
 }
 
 type UploadedTempMetadata struct {

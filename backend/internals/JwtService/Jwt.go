@@ -24,14 +24,13 @@ func CreateJwt(secretKey string, id uint, exp int64) (string, error) {
 }
 
 func ParseJwt(secretKey []byte, tokenStr string) (jwt.MapClaims, error) {
-	key := []byte(secretKey)
 
 	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method")
 		}
 
-		return key, nil
+		return secretKey, nil
 	})
 
 	if err != nil {

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import styles from "../../css/authpage.module.css";
-import { Login, Signup } from "../../services/userService";
+import { Login, Signup, sendResetPasswordEmail } from "../../services/userService";
 import { useNavigate } from "react-router-dom";
 import EyeSlashIcon from "../../assets/eye_slash.svg";
 import EyeIcon from "../../assets/eye.png";
@@ -23,22 +23,38 @@ export default function AuthPage({ setIsLoggedIn }) {
 
         if (isForgotPassword) {
             if (!email) {
-                alert("Please enter your email.");
+                toast.error("Please enter your email.");
                 return;
             }
-            // Simulate API call for password reset and notif it with toastify
-            setIsForgotPassword(false);
+
+            try {
+                const response = await sendResetPasswordEmail(email);
+                if (response.status === 202) {
+                    toast.success("Password reset email sent successfully!");
+                    setIsForgotPassword(false);
+                } else {
+                    toast.error(response.data.message);
+                }
+            } catch (err) {
+                if (err.response) {
+                    toast.error(err.response.data.message || "Failed to send reset email");
+                } else if (err.request) {
+                    toast.error("Network error. Please check your connection.");
+                } else {
+                    toast.error("An unexpected error occurred");
+                }
+            }
             return;
         }
 
         if (isLogin) {
             if (!email || !password) {
-                alert("Please fill in all fields.");
+                toast.error("Please fill in all fields.");
                 return;
             }
         } else {
             if (!email || !password || !username || !confirmPassword) {
-                alert("Please fill in all fields.");
+                toast.error("Please fill in all fields.");
                 return;
             }
         }
@@ -55,7 +71,7 @@ export default function AuthPage({ setIsLoggedIn }) {
 
                     setTimeout(() => {
                         navigate("/")
-                    }, 2000)
+                    }, 1500)
                 } else {
                     toast.error(response.data.message)
                 }
@@ -70,7 +86,13 @@ export default function AuthPage({ setIsLoggedIn }) {
                 }
             }
         } catch (err) {
-            toast.error(err.response.data.message)
+            if (err.response) {
+                toast.error(err.response.data.message || "An error occurred")
+            } else if (err.request) {
+                toast.error("Network error. Please check your connection.")
+            } else {
+                toast.error("An unexpected error occurred")
+            }
         }
     }
 

@@ -15,7 +15,9 @@ import (
 func SetupRouter(db *gorm.DB, mqc *mq.MQClient) *chi.Mux {
 	r := chi.NewRouter()
 	keyStr := os.Getenv("JWT_SECRET")
+	resetPasswordKeyStr := os.Getenv("JWT_RESET_SECRET")
 	key := []byte(keyStr)
+	resetPasswordKey := []byte(resetPasswordKeyStr)
 
 	//setup Redis
 	rdbc := Redis.NewRedisClient()
@@ -37,7 +39,7 @@ func SetupRouter(db *gorm.DB, mqc *mq.MQClient) *chi.Mux {
 		r.Post("/signup", userHandlers.Signup)
 		r.Get("/profile", middleware.Auth(userHandlers.GetProfile, key))
 		r.Post("/reset-password", userHandlers.SendResetPasswordEmail)
-		r.Post("/change-password", middleware.Auth(userHandlers.ChangePasswordByEmail, key))
+		r.Post("/change-password", middleware.Auth(userHandlers.ChangePasswordByEmail, resetPasswordKey))
 	})
 
 	// Video routes

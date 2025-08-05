@@ -95,6 +95,30 @@
     text-decoration: none;
 }
 
+/* Logout Button */
+.logoutButton {
+    background: linear-gradient(90deg, #dc2626 0%, #ef4444 100%);
+    color: #fff;
+    border: none;
+    font-size: 0.9rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    padding: 0.4em 1.2em;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    outline: none;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.logoutButton:hover,
+.logoutButton:focus {
+    background: linear-gradient(90deg, #b91c1c 0%, #dc2626 100%);
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(220,38,38,0.24);
+}
+
 /* Signup/Login Link */
 .userIcon {
     width: 32px;

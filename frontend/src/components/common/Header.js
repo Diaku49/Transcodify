@@ -11,8 +11,6 @@ export default function Header({ isLoggedIn, setIsLoggedIn }) {
 
     const loginStatusColor = isLoggedIn ? "#22c55e" : "#ef4444";
 
-
-
     return (
         <header className={styles.header}>
             <div className={styles.headerLeft}></div>

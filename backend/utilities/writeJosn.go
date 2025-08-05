@@ -6,7 +6,10 @@ import (
 )
 
 func WriteJsonError(w http.ResponseWriter, message string, status int, err error) {
-	errorMsg := message + ": " + err.Error()
+	errorMsg := message
+	if err != nil {
+		errorMsg = message + ": " + err.Error()
+	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	json.NewEncoder(w).Encode(map[string]string{"message": errorMsg})

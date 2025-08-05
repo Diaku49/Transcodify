@@ -140,20 +140,23 @@ func (uh *UserHandler) SendResetPasswordEmail(w http.ResponseWriter, r *http.Req
 	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {
 		util.WriteJsonError(w, "couldnt parse payload", http.StatusBadRequest, err)
+		return
 	}
 
 	if err := uh.Validate.Struct(payload); err != nil {
 		util.WriteJsonError(w, "Validation failed", http.StatusBadRequest, err)
+		return
 	}
 
 	userCred, err := uh.UserRepository.GetUserByEmail(payload.Email)
 	if err != nil {
 		util.WriteJsonError(w, err.Error(), http.StatusInternalServerError, err)
+		return
 	}
 
 	// make token
-	tokenKey := os.Getenv("RESET_PASSWORD_TOKEN")
-	token, err := Jwt.CreateJwt(string(tokenKey), userCred.ID, time.Now().Add(time.Hour*1).Unix())
+	tokenKey := os.Getenv("JWT_RESET_SECRET")
+	token, err := Jwt.CreateJwt(tokenKey, userCred.ID, time.Now().Add(time.Hour*1).Unix())
 	if err != nil {
 		util.WriteJsonError(w, "token creation failed", http.StatusInternalServerError, err)
 		return
@@ -183,10 +186,12 @@ func (uh *UserHandler) ChangePasswordByEmail(w http.ResponseWriter, r *http.Requ
 	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {
 		util.WriteJsonError(w, "couldnt parse payload", http.StatusBadRequest, err)
+		return
 	}
 
 	if err := uh.Validate.Struct(payload); err != nil {
 		util.WriteJsonError(w, "Validation failed", http.StatusBadRequest, err)
+		return
 	}
 
 	userId, err := util.GetUserIDFromContext(r)
